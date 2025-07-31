@@ -1,0 +1,208 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}{{ title }} - Django Blog{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">
+                        <i class="fas fa-{% if post %}edit{% else %}plus{% endif %} me-2"></i>
+                        {{ title }}
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <!-- Title -->
+                        <div class="mb-3">
+                            <label for="{{ form.title.id_for_label }}" class="form-label">
+                                <strong>Title</strong> <span class="text-danger">*</span>
+                            </label>
+                            {{ form.title }}
+                            {% if form.title.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ form.title.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Slug -->
+                        <div class="mb-3">
+                            <label for="{{ form.slug.id_for_label }}" class="form-label">
+                                <strong>URL Slug</strong> <span class="text-danger">*</span>
+                                <small class="text-muted">(Used in the post URL)</small>
+                            </label>
+                            {{ form.slug }}
+                            {% if form.slug.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ form.slug.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Content -->
+                        <div class="mb-3">
+                            <label for="{{ form.content.id_for_label }}" class="form-label">
+                                <strong>Content</strong> <span class="text-danger">*</span>
+                            </label>
+                            {{ form.content }}
+                            {% if form.content.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ form.content.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Excerpt -->
+                        <div class="mb-3">
+                            <label for="{{ form.excerpt.id_for_label }}" class="form-label">
+                                <strong>Excerpt</strong>
+                                <small class="text-muted">(Brief description for post previews)</small>
+                            </label>
+                            {{ form.excerpt }}
+                            {% if form.excerpt.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ form.excerpt.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="row">
+                            <!-- Category -->
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.category.id_for_label }}" class="form-label">
+                                    <strong>Category</strong>
+                                </label>
+                                {{ form.category }}
+                                {% if form.category.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.category.errors }}
+                                </div>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Status -->
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.status.id_for_label }}" class="form-label">
+                                    <strong>Status</strong>
+                                </label>
+                                {{ form.status }}
+                                {% if form.status.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.status.errors }}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <!-- Image -->
+                        <div class="mb-3">
+                            <label for="{{ form.image.id_for_label }}" class="form-label">
+                                <strong>Featured Image</strong>
+                            </label>
+                            {{ form.image }}
+                            {% if form.image.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ form.image.errors }}
+                            </div>
+                            {% endif %}
+                            {% if post and post.image %}
+                            <div class="mt-2">
+                                <small class="text-muted">Current image:</small><br>
+                                <img src="{{ post.image.url }}" alt="Current image" class="img-thumbnail" style="max-width: 200px;">
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Tags -->
+                        <div class="mb-4">
+                            <label class="form-label">
+                                <strong>Tags</strong>
+                                <small class="text-muted">(Select relevant tags for your post)</small>
+                            </label>
+                            <div class="row">
+                                {% for tag in form.tags %}
+                                <div class="col-md-4 col-sm-6 mb-2">
+                                    <div class="form-check">
+                                        {{ tag.tag }}
+                                        <label class="form-check-label" for="{{ tag.id_for_label }}">
+                                            {{ tag.choice_label }}
+                                        </label>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% if form.tags.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ form.tags.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Form Actions -->
+                        <div class="d-flex justify-content-between">
+                            <a href="{% if post %}{{ post.get_absolute_url }}{% else %}{% url 'blog:post_list' %}{% endif %}" 
+                               class="btn btn-outline-secondary">
+                                <i class="fas fa-times me-2"></i>Cancel
+                            </a>
+                            <div>
+                                {% if post %}
+                                <button type="submit" name="status" value="draft" class="btn btn-outline-primary me-2">
+                                    <i class="fas fa-save me-2"></i>Save as Draft
+                                </button>
+                                <button type="submit" name="status" value="published" class="btn btn-primary">
+                                    <i class="fas fa-check me-2"></i>Update Post
+                                </button>
+                                {% else %}
+                                <button type="submit" name="status" value="draft" class="btn btn-outline-primary me-2">
+                                    <i class="fas fa-save me-2"></i>Save as Draft
+                                </button>
+                                <button type="submit" name="status" value="published" class="btn btn-primary">
+                                    <i class="fas fa-paper-plane me-2"></i>Publish Post
+                                </button>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Writing Tips -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h6 class="mb-0">
+                        <i class="fas fa-lightbulb me-2"></i>Writing Tips
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <ul class="mb-0">
+                        <li><strong>Title:</strong> Make it catchy and descriptive</li>
+                        <li><strong>Slug:</strong> Use lowercase letters, numbers, and hyphens only</li>
+                        <li><strong>Excerpt:</strong> Write a compelling summary to attract readers</li>
+                        <li><strong>Content:</strong> Use clear paragraphs and engaging language</li>
+                        <li><strong>Tags:</strong> Choose relevant tags to help readers find your post</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Auto-generate slug from title
+document.getElementById('{{ form.title.id_for_label }}').addEventListener('input', function() {
+    const title = this.value;
+    const slug = title.toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-')
+        .trim('-');
+    document.getElementById('{{ form.slug.id_for_label }}').value = slug;
+});
+</script>
+{% endblock %}
+
