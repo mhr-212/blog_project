@@ -2,6 +2,17 @@
 
 A modern, feature-rich blog platform built with Django, featuring user authentication, content management, and a responsive design.
 
+## 📷 Features
+- **Main**
+<img width="591" height="761" alt="image" src="https://github.com/user-attachments/assets/e0e2be2d-7fef-44d6-9986-14dbe21d89f0" />
+
+- **AddPost**
+<img width="594" height="729" alt="image" src="https://github.com/user-attachments/assets/616bf7bb-6e30-4590-ab48-e2d868672cc7" />
+
+- **PostDetail**
+<img width="522" height="887" alt="image" src="https://github.com/user-attachments/assets/552bb0bc-dc75-4509-bcca-552235f6b2c7" />
+
+
 ## 🚀 Features
 
 ### Core Functionality
